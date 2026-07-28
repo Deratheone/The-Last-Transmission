@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stage 2 • Emergency Network Access</title>
+  <style>
+    :root {
+      --bg: #f6f1e7;
+      --paper: #fdfaf3;
+      --ink: #1f1f1f;
+      --muted: #666;
+      --accent: #7a4c1d;
+      --accent-soft: #b77b3b;
+      --ok: #1f7a3d;
+      --error: #a32020;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      font-family: "Segoe UI", "Inter", "Trebuchet MS", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 15%, rgba(183, 123, 59, 0.08), transparent 30%),
+        radial-gradient(circle at 85% 80%, rgba(122, 76, 29, 0.08), transparent 30%),
+        var(--bg);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(transparent 31px, rgba(0,0,0,0.03) 32px),
+        linear-gradient(90deg, transparent 31px, rgba(0,0,0,0.03) 32px);
+      background-size: 32px 32px;
+      opacity: 0.25;
+      mix-blend-mode: multiply;
+    }
+
+    .app {
+      width: 100%;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .card {
+      width: min(1100px, 96vw);
+      background: var(--paper);
+      border: 2px solid #d7cbb8;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 20px;
+      padding: clamp(20px, 3vw, 36px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px dashed #c9b9a3;
+      padding-bottom: 12px;
+    }
+
+    .brand {
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 0.95rem;
+    }
+
+    .status {
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.4rem, 2.8vw, 2.2rem);
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: clamp(0.95rem, 1.8vw, 1.05rem);
+    }
+
+    .main {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .panel {
+      border: 1.5px solid #d8c9b3;
+      border-radius: 14px;
+      background: #fffdf8;
+      padding: 18px;
+    }
+
+    .dots {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .dot {
+      height: 58px;
+      border: 2px solid #c9b9a3;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 1.4rem;
+      font-weight: 700;
+      background: #fff;
+      transition: 0.2s ease;
+    }
+
+    .dot.filled {
+      border-color: var(--accent-soft);
+      background: #fff5e9;
+      transform: translateY(-2px);
+    }
+
+    .hint {
+      min-height: 1.4em;
+      color: var(--muted);
+      margin-bottom: 14px;
+      font-size: 0.95rem;
+    }
+    .hint.error { color: var(--error); }
+    .hint.ok { color: var(--ok); }
+
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(80px, 1fr));
+      gap: 10px;
+    }
+
+    .key {
+      border: 2px solid #d3c4ae;
+      border-radius: 10px;
+      background: #fff;
+      font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+      font-weight: 700;
+      min-height: 62px;
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+    .key:active { transform: scale(0.99); }
+    .key.action { font-size: 0.92rem; text-transform: uppercase; }
+    .key.enter {
+      background: #f3e5d1;
+      border-color: #b89163;
+      color: #4d2f0f;
+    }
+
+    .video-panel h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #5d452e;
+    }
+
+    .video-shell {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 2px solid #d7c7af;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.15);
+      background: #000;
+    }
+
+    video {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      display: block;
+      background: #000;
+    }
+
+    .video-note {
+      margin-top: 10px;
+      color: #6a6258;
+      font-size: 0.9rem;
+    }
+
+    .footer {
+      border-top: 1px dashed #c9b9a3;
+      padding-top: 10px;
+      color: #6a6258;
+      font-size: 0.9rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 920px) {
+      .main { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="card">
+      <div class="header">
+        <div class="brand">EVA ARCHIVE // ROOM 2</div>
+        <div class="status">03:17:42 UTC // EARLY MEMORY</div>
+      </div>
+
+      <div>
+        <h1>EVA Archive: Early Memory</h1>
+        <p class="subtitle">
+          The first beacon opened this archive. Watch carefully: EVA's early memories explain why the world learned to depend on it — and why it later stopped listening.
+        </p>
+      </div>
+
+      <div class="main">
+        <!-- LEFT: CODE ENTRY -->
+        <section class="panel">
+          <div class="dots" id="dots"></div>
+          <div class="hint" id="hint">Awaiting code entry...</div>
+
+          <div class="keypad" id="keypad">
+            <button class="key" data-key="1">1</button>
+            <button class="key" data-key="2">2</button>
+            <button class="key" data-key="3">3</button>
+            <button class="key" data-key="4">4</button>
+            <button class="key" data-key="5">5</button>
+            <button class="key" data-key="6">6</button>
+            <button class="key" data-key="7">7</button>
+            <button class="key" data-key="8">8</button>
+            <button class="key" data-key="9">9</button>
+            <button class="key action" id="clearBtn">Clear</button>
+            <button class="key" data-key="0">0</button>
+            <button class="key action enter" id="enterBtn">Enter</button>
+          </div>
+        </section>
+
+        <!-- RIGHT: EMBEDDED VIDEO -->
+        <section class="panel video-panel">
+          <h3>Recovered EVA Memory</h3>
+          <div class="video-shell">
+            <video id="missionVideo" controls playsinline autoplay muted preload="auto">
+              <source src="docs/video.mp4" type="video/mp4" />
+              Your browser does not support HTML5 video.
+            </video>
+          </div>
+          <div class="video-note" id="videoNote">
+            Archive locked. Enter the beacon fragment to begin playback.
+          </div>
+          <div class="video-note" id="archiveLog" aria-live="polite">
+            ARCHIVE STATUS: fragment missing. Awaiting a six-digit recovery key.
+          </div>
+          <div class="video-note" id="adminInstruction" hidden>
+            SYSTEM ERROR: ADMIN PRIVILEGES REQUIRED.<br>
+            Program <b>123456</b> into MIFARE Classic Block 4, then scan that card at the RFID node.
+          </div>
+        </section>
+      </div>
+
+      <div class="footer">
+        <span>The Last Transmission • Mission Gateway</span>
+        <span>Touch + Keyboard Supported</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const AUTH_CODE = "123456";
+      const CODE_LENGTH = 6;
+
+      const dotsEl = document.getElementById("dots");
+      const hintEl = document.getElementById("hint");
+      const keypadEl = document.getElementById("keypad");
+      const clearBtn = document.getElementById("clearBtn");
+      const enterBtn = document.getElementById("enterBtn");
+      const missionVideo = document.getElementById("missionVideo");
+      const videoNote = document.getElementById("videoNote");
+      const adminInstruction = document.getElementById("adminInstruction");
+      const archiveLog = document.getElementById("archiveLog");
+
+      let inputCode = "";
+      let unlocked = false;
+      let archiveFaulted = false;
+
+      // Keep video visually embedded but locked until code is correct
+      missionVideo.pause();
+      missionVideo.controls = false;
+      missionVideo.muted = true;
+
+      function setHint(message, type = "") {
+        hintEl.textContent = message;
+        hintEl.classList.remove("ok", "error");
+        if (type) hintEl.classList.add(type);
+      }
+
+      function renderDots() {
+        dotsEl.innerHTML = "";
+        for (let i = 0; i < CODE_LENGTH; i++) {
+          const cell = document.createElement("div");
+          cell.className = "dot" + (i < inputCode.length ? " filled" : "");
+          cell.textContent = i < inputCode.length ? inputCode[i] : "";
+          dotsEl.appendChild(cell);
+        }
+      }
+
+      function appendDigit(d) {
+        if (unlocked) return;
+        if (inputCode.length >= CODE_LENGTH) return;
+        inputCode += d;
+        renderDots();
+        setHint(`Code entered: ${inputCode.length}/${CODE_LENGTH}`);
+      }
+
+      function clearCode() {
+        if (unlocked) return;
+        inputCode = "";
+        renderDots();
+        setHint("Code cleared. Awaiting code entry...");
+      }
+
+      function unlockAndPlay() {
+        unlocked = true;
+        setHint("Beacon fragment accepted. EVA's early memories are recovering.", "ok");
+        videoNote.textContent = "Transmission unlocked. Playback may end with an administrator error.";
+        archiveLog.textContent = "EVA ARCHIVE: restoring creation records... communication dependency increasing...";
+        missionVideo.scrollIntoView({ behavior: "smooth", block: "center" });
+        missionVideo.controls = true;
+        missionVideo.currentTime = 0;
+        missionVideo.muted = true;
+        missionVideo.volume = 1;
+
+        missionVideo.play()
+          .then(() => {
+            missionVideo.muted = false;
+          })
+          .catch((err) => {
+            console.warn("Autoplay blocked:", err);
+            missionVideo.muted = false;
+            videoNote.textContent = "Unlocked. Press Play to start transmission.";
+          });
+      }
+
+      function showAdminPrompt() {
+        if (archiveFaulted) return;
+        archiveFaulted = true;
+        missionVideo.pause();
+        videoNote.textContent = "SYSTEM ERROR: ADMIN PRIVILEGES REQUIRED.";
+        archiveLog.textContent = "ARCHIVE HALTED: only a programmed administrator card can recover this memory sector.";
+        adminInstruction.hidden = false;
+        adminInstruction.scrollIntoView({ behavior: "smooth", block: "center" });
+        setHint("The archive needs a programmed RFID administrator card.", "error");
+      }
+
+      function rejectCode() {
+        setHint("Authentication failed. Invalid code.", "error");
+
+        dotsEl.animate(
+          [
+            { transform: "translateX(0)" },
+            { transform: "translateX(-6px)" },
+            { transform: "translateX(6px)" },
+            { transform: "translateX(-4px)" },
+            { transform: "translateX(4px)" },
+            { transform: "translateX(0)" }
+          ],
+          { duration: 280, easing: "ease-out" }
+        );
+
+        setTimeout(() => {
+          inputCode = "";
+          renderDots();
+          setHint("Awaiting code entry...");
+        }, 700);
+      }
+
+      function submitCode() {
+        if (unlocked) return;
+
+        if (inputCode.length !== CODE_LENGTH) {
+          setHint("Please enter all 6 digits before pressing Enter.", "error");
+          return;
+        }
+
+        if (inputCode === AUTH_CODE) {
+          unlockAndPlay();
+        } else {
+          rejectCode();
+        }
+      }
+
+      // Prevent manual play before unlock
+      missionVideo.addEventListener("play", () => {
+        if (!unlocked || archiveFaulted) {
+          missionVideo.pause();
+          videoNote.textContent = archiveFaulted
+            ? "Archive halted. Program the RFID administrator card."
+            : "Video is locked. Enter valid 6-digit code first.";
+        }
+      });
+
+      missionVideo.addEventListener("error", () => {
+        setHint("Video error: cannot load docs/video.mp4", "error");
+        videoNote.textContent = "Check that docs/video.mp4 exists and is reachable.";
+      });
+
+      missionVideo.addEventListener("ended", showAdminPrompt);
+      missionVideo.addEventListener("timeupdate", () => {
+        if (missionVideo.duration && missionVideo.currentTime >= missionVideo.duration - 5) {
+          showAdminPrompt();
+        }
+      });
+
+      keypadEl.addEventListener("click", (e) => {
+        const btn = e.target.closest("button");
+        if (!btn) return;
+        const digit = btn.getAttribute("data-key");
+        if (digit !== null) appendDigit(digit);
+      });
+
+      clearBtn.addEventListener("click", clearCode);
+      enterBtn.addEventListener("click", submitCode);
+
+      window.addEventListener("keydown", (e) => {
+        if (unlocked) return;
+
+        if (e.key >= "0" && e.key <= "9") appendDigit(e.key);
+        else if (e.key === "Backspace") {
+          inputCode = inputCode.slice(0, -1);
+          renderDots();
+          setHint(`Code entered: ${inputCode.length}/${CODE_LENGTH}`);
+        } else if (e.key === "Enter") submitCode();
+        else if (e.key === "Escape") clearCode();
+      });
+
+      renderDots();
+    })();
+  </script>
+</body>
+</html>

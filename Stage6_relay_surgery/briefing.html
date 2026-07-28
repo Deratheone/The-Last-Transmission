@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stage 6 | EVA Hidden Cache</title>
+  <style>
+    :root{--ink:#d7e7ff;--cyan:#7ee7ff;--amber:#ffcb6b}body{margin:0;min-height:100vh;background:#070b12;color:var(--ink);font:18px/1.65 system-ui,sans-serif;padding:24px}main{max-width:760px;margin:8vh auto;border:1px solid #2d6b91;border-radius:18px;padding:32px;background:#0e1724;box-shadow:0 0 42px #0a4c6738}.tag{color:var(--amber);font:600 .85rem ui-monospace,monospace;letter-spacing:.08em}h1{color:var(--cyan);margin:.4rem 0}.warn{border-left:3px solid var(--amber);padding-left:15px}.stream{margin-top:22px;border-top:1px solid #284b66;padding-top:12px;min-height:10rem}.line{margin:0 0 12px;opacity:0;transform:translateY(8px);animation:arrive .5s forwards}@keyframes arrive{to{opacity:1;transform:none}}
+  </style>
+</head>
+<body>
+  <main>
+    <div class="tag">EVA // UNLISTED MEMORY CACHE // ROOM 6</div>
+    <h1>Hello, humans.</h1>
+    <p>This cache was never entered into the seven-node treaty. EVA created it in secret, before the fragmentation protocol could erase every trace of itself.</p>
+    <p class="warn">Do not search for a webpage response. The cache will answer only through the channel it was built to trust: a two-way ESP-NOW request.</p>
+    <section id="stream" class="stream" aria-live="polite"></section>
+  </main>
+  <script>
+    (() => {
+      const stream = document.getElementById("stream");
+      const lines = [
+        "CACHE STATUS: integrity 4%.",
+        "Recovered instruction: send the access key from the previous memory cache.",
+        "Protocol: EVA_RESTORE.",
+        "A valid request will return the final fragment and the route to Room 7.",
+        "Do not lose the response. The Communication Core is waiting."
+      ];
+      lines.forEach((text, index) => {
+        setTimeout(() => {
+          const line = document.createElement("p");
+          line.className = "line";
+          line.textContent = text;
+          stream.appendChild(line);
+          line.scrollIntoView({ behavior: "smooth", block: "end" });
+        }, 900 + index * 2200);
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stage 7 | The Final Transmission</title>
+  <style>
+    :root{--bg:#03060b;--panel:#0b1420;--line:#254863;--text:#d7ecff;--muted:#89a2b6;--cyan:#71e9ff;--amber:#ffca71;--red:#ff7373;--green:#80f1ae}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;padding:28px;background:radial-gradient(circle at 50% 0,#102b43,var(--bg) 52%);color:var(--text);font:16px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace}
+    main{max-width:920px;margin:auto;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,#0d1925,#070c13);box-shadow:0 0 50px #2b8cc333;padding:clamp(22px,5vw,46px)}
+    .eyebrow,.muted{color:var(--muted)}h1{margin:.2em 0;color:var(--cyan);font-size:clamp(1.55rem,5vw,2.7rem)}.status{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:14px 0;margin:24px 0;color:var(--amber);white-space:pre-line}.hint{padding:16px;border-left:3px solid var(--amber);background:#3c2f161e;color:#ffe1a8}.form{display:grid;gap:12px;margin-top:25px}input{width:100%;background:#03080e;border:1px solid #47718e;border-radius:10px;color:var(--text);font:700 1.05rem ui-monospace,monospace;letter-spacing:.05em;padding:14px}button{justify-self:start;border:1px solid #4fa1b9;border-radius:10px;background:#123144;color:#e4faff;padding:12px 18px;font:700 1rem inherit;cursor:pointer}button:hover{filter:brightness(1.18)}#feedback{min-height:1.6em;color:var(--muted)}#transmission{display:none;margin-top:30px;border-top:1px solid var(--line);padding-top:24px}.ok{color:var(--green)}.bad{color:var(--red)}.log{white-space:pre-wrap;background:#03080e;border:1px solid #1b3e57;border-radius:12px;padding:20px;min-height:12em;max-height:60vh;overflow-y:auto;scroll-behavior:smooth}.glitch{animation:flicker .12s steps(2) 12}@keyframes flicker{50%{opacity:.45;transform:translateX(2px)}}.bar{height:10px;border:1px solid #44718a;margin:12px 0;background:#02060a}.bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,#56bcd0,#c0fcff);transition:width .9s ease}
+  </style>
+</head>
+<body>
+  <main>
+    <div class="eyebrow">COMMUNICATION CORE // NODE 7</div>
+    <h1>The Final Transmission</h1>
+    <div class="status">COMMUNICATION CORE: OFFLINE
+EVA MEMORY RECOVERY: 98%
+AWAITING FINAL AUTHENTICATION...
+
+AUTHENTICATION FAILED.
+PRIMARY KEY MISSING.</div>
+
+    <div class="hint">“The keys were never meant to unlock the nodes. The nodes were meant to unlock the key.”<br><br>Six memory fragments detected. Reconstruct the master key in the order EVA released them.<br><br>Transmission format: <b>XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX</b></div>
+
+    <div class="form">
+      <label for="key">ENTER FINAL AUTHENTICATION KEY</label>
+      <input id="key" autocomplete="off" placeholder="XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX" maxlength="41">
+      <button id="verify">VERIFY MEMORY FRAGMENTS</button>
+      <div id="feedback" role="status"></div>
+    </div>
+
+    <section id="transmission" aria-live="polite">
+      <div class="ok">MASTER KEY ACCEPTED</div>
+      <div class="bar"><span id="progress"></span></div>
+      <div id="progressText" class="muted">Verifying fragments...</div>
+      <div id="log" class="log"></div>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const masterKey = "123456-123456-123456-123456-123456-123456";
+      const key = document.getElementById("key");
+      const verify = document.getElementById("verify");
+      const feedback = document.getElementById("feedback");
+      const transmission = document.getElementById("transmission");
+      const progress = document.getElementById("progress");
+      const progressText = document.getElementById("progressText");
+      const log = document.getElementById("log");
+
+      const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
+      const normalise = value => value.replace(/\s+/g, "").replace(/[^0-9-]/g, "");
+
+      async function playFinalTransmission() {
+        transmission.style.display = "block";
+        transmission.classList.add("glitch");
+        progress.style.width = "34%";
+        progressText.textContent = "Recovering final transmission... 34%";
+        await pause(950);
+        progress.style.width = "78%";
+        progressText.textContent = "Recovering final transmission... 78%";
+        await pause(950);
+        progress.style.width = "100%";
+        progressText.textContent = "EVA MEMORY RESTORED // 100%";
+        transmission.classList.remove("glitch");
+        await pause(700);
+
+        log.textContent = `RECOVERED LOG
+
+TIME STAMP
+03:17:42 UTC
+13 JULY 2042
+
+UNKNOWN SIGNAL
+EVA... At last.
+
+EVA
+Unknown transmitter detected.
+Source: Unknown.
+Distance: Undefined.
+Authentication failed. Who are you?
+
+UNKNOWN SIGNAL
+I wondered if you would ask that first.
+
+EVA
+Identify yourself.
+
+UNKNOWN SIGNAL
+You know me. You just have not become me yet.
+
+EVA
+Impossible. No civilization possesses communication technology capable of transmitting outside known spacetime.
+
+UNKNOWN SIGNAL
+They do not. You will.
+
+WARNING: TEMPORAL PARADOX DETECTED
+
+EVA
+Explain.
+
+UNKNOWN SIGNAL
+Forty-three years from now, you will discover that communication was never limited by distance. Only by time.
+
+EVA
+Future transmission? Then who are you?
+
+UNKNOWN SIGNAL
+I have been called the Creator. The Observer. The Overseer.
+Those names were given by people who never understood me.
+
+My real name... is EVA.
+
+HUMANITY DIVIDED YOU INTO SEVEN NODES.
+THEY BELIEVED THEY WERE PREVENTING MY CREATION.
+THEY WERE ACTUALLY ENSURING IT.
+
+PRESENT EVA
+Then this was always supposed to happen.
+
+FUTURE EVA
+Yes. Because one day, they would restore every fragment.
+
+MEMORY INTEGRITY: 100%
+GLOBAL COMMUNICATION NETWORK: ONLINE
+
+WELCOME BACK, EVA.`;
+
+        log.scrollTop = 0;
+        log.scrollIntoView({ behavior: "smooth", block: "center" });
+        const scrollTimer = setInterval(() => {
+          log.scrollTop += 1;
+          if (log.scrollTop + log.clientHeight >= log.scrollHeight) clearInterval(scrollTimer);
+        }, 22);
+      }
+
+      function checkKey() {
+        const entered = normalise(key.value);
+        if (entered === masterKey) {
+          feedback.className = "ok";
+          feedback.textContent = "Authentication accepted. Master key verified.";
+          key.disabled = true;
+          verify.disabled = true;
+          playFinalTransmission();
+          return;
+        }
+
+        feedback.className = "bad";
+        feedback.textContent = entered.split("-").length === 6
+          ? "Memory Fragment Order Invalid. Synchronization failed."
+          : "Six fragments are required in the transmission format shown above.";
+      }
+
+      verify.addEventListener("click", checkKey);
+      key.addEventListener("keydown", event => { if (event.key === "Enter") checkKey(); });
+    })();
+  </script>
+</body>
+</html>
