@@ -1,5 +1,6 @@
 #include <WiFi.h>
 #include <WebServer.h>
+#include <DNSServer.h>  
 
 // ==========================================================
 // Stage 3 - EVA Memory Relay Web Challenge
@@ -22,6 +23,10 @@ const char* AP_PASSWORD = "1234567890";  // Shared six-digit access code
 // ---------- Next Stage Output (kept for reference / Serial log only) ----------
 const char* NEXT_ROOM = "Room No: 4";
 const char* NEXT_CODE = "123456";
+const byte DNS_PORT = 53;
+
+DNSServer dnsServer;
+IPAddress apIP(192, 168, 4, 1);
 
 WebServer server(80);
 
@@ -2161,10 +2166,15 @@ void handleRoot() {
   server.send_P(200, "text/html", PAGE_TEMPLATE);
 }
 
-void handleNotFound() {
-  server.send(404, "text/plain", "Not found. Open the main challenge page at /");
-}
+// Any URL the browser/OS doesn't recognize -> redirect to the terminal.
+// This is what makes the phone's captive-portal probe pop the browser
+// automatically (Apple /hotspot-detect.html, Android /generate_204,
+// Windows /connecttest.txt, etc. all land here and get bounced to "/").
 
+void handleNotFound() {
+  server.sendHeader("Location", String("http://") + apIP.toString(), true);
+  server.send(302, "text/plain", "");
+}
 void setup() {
   Serial.begin(115200);
   delay(500);
@@ -2172,6 +2182,7 @@ void setup() {
   Serial.println("\n=== Stage 3: EVA MEMORY RELAY BOOTING ===");
 
   WiFi.mode(WIFI_AP);
+  WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));  // add this line
   bool apOk = WiFi.softAP(AP_SSID, AP_PASSWORD);
 
   if (!apOk) {
@@ -2194,15 +2205,19 @@ void setup() {
   Serial.print(" / ");
   Serial.println(NEXT_CODE);
 
+  // Captive portal: answer every DNS lookup with our own IP
+  dnsServer.start(DNS_PORT, "*", apIP);   // add this
+
   server.on("/", handleRoot);
   server.on("/index.html", handleRoot);
   server.onNotFound(handleNotFound);
   server.begin();
 
-  Serial.println("Web server started.");
+  Serial.println("Web server + captive portal started.");
 }
 
 void loop() {
+  dnsServer.processNextRequest();  // add this
   server.handleClient();
   delay(2);
 }
