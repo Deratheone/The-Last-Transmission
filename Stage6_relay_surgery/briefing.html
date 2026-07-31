@@ -1,21 +1,234 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Stage 6 | EVA Hidden Cache</title>
-  <style>
-    :root{--ink:#d7e7ff;--cyan:#7ee7ff;--amber:#ffcb6b}body{margin:0;min-height:100vh;background:#070b12;color:var(--ink);font:18px/1.65 system-ui,sans-serif;padding:24px}main{max-width:760px;margin:8vh auto;border:1px solid #2d6b91;border-radius:18px;padding:32px;background:#0e1724;box-shadow:0 0 42px #0a4c6738}.tag{color:var(--amber);font:600 .85rem ui-monospace,monospace;letter-spacing:.08em}h1{color:var(--cyan);margin:.4rem 0}.warn{border-left:3px solid var(--amber);padding-left:15px}.stream{margin-top:22px;border-top:1px solid #284b66;padding-top:12px;min-height:10rem}.line{margin:0 0 12px;opacity:0;transform:translateY(8px);animation:arrive .5s forwards}@keyframes arrive{to{opacity:1;transform:none}}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Stage 6 | EVA Hidden Cache</title>
+<style>
+  :root{
+    --paper:#ece2c9;
+    --paper-2:#e2d5b3;
+    --paper-shadow:#b8a97e;
+    --ink:#2a2015;
+    --ink-soft:#5b4d38;
+    --rust:#a13c26;
+    --screen-bg:#04100c;
+    --screen-bezel:#171310;
+    --pixel:#6bffb0;
+    --pixel-dim:#2f8f66;
+    --tape:#d9cfa8;
+  }
+
+  *{box-sizing:border-box}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important}
+  }
+
+  html,body{margin:0;padding:0}
+
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(ellipse at 20% 0%, #00000018, transparent 55%),
+      radial-gradient(ellipse at 80% 100%, #00000018, transparent 55%),
+      var(--paper);
+    background-blend-mode:multiply;
+    color:var(--ink);
+    font:16px/1.6 Georgia, "Iowan Old Style", "Times New Roman", serif;
+    padding:6vw 4vw 10vw;
+    display:flex;
+    justify-content:center;
+  }
+
+  /* paper grain, self-contained (no external image) */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    pointer-events:none;
+    opacity:.5;
+    mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  main{
+    position:relative;
+    width:100%;
+    max-width:640px;
+    background:
+      linear-gradient(180deg, var(--paper-2), var(--paper) 30%);
+    padding:clamp(20px, 5vw, 44px) clamp(18px, 5.5vw, 46px) clamp(28px, 6vw, 52px);
+    transform:rotate(-0.4deg);
+    box-shadow:
+      0 1px 0 #fff8,
+      0 18px 40px -18px #00000055,
+      0 2px 0 var(--paper-shadow);
+    clip-path:polygon(
+      0.5% 1%, 12% 0%, 30% 0.6%, 55% 0%, 78% 0.4%, 99.4% 0%,
+      100% 20%, 99.5% 45%, 100% 70%, 99.3% 92%, 100% 99.3%,
+      82% 100%, 60% 99.4%, 38% 100%, 18% 99.5%, 0% 100%,
+      0.6% 78%, 0% 55%, 0.5% 33%, 0% 12%
+    );
+  }
+
+  .stamp{
+    display:inline-block;
+    font:700 clamp(.65rem,2.4vw,.8rem)/1 "Courier New", ui-monospace, monospace;
+    letter-spacing:.14em;
+    color:var(--rust);
+    border:2px solid var(--rust);
+    padding:.5em .7em;
+    transform:rotate(-2deg);
+    opacity:.85;
+    text-transform:uppercase;
+  }
+
+  .subtag{
+    margin:.8em 0 0;
+    font:600 clamp(.7rem,2.6vw,.8rem)/1.4 "Courier New", ui-monospace, monospace;
+    letter-spacing:.08em;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+  }
+
+  h1{
+    font-family: Georgia, "Times New Roman", serif;
+    font-style:italic;
+    font-weight:700;
+    font-size:clamp(1.9rem, 7vw, 2.7rem);
+    margin:.5em 0 .4em;
+    color:var(--ink);
+    border-bottom:1px solid var(--ink-soft);
+    padding-bottom:.25em;
+  }
+
+  p{
+    margin:0 0 1em;
+    font-size:clamp(.98rem, 3.4vw, 1.08rem);
+    color:var(--ink-soft);
+  }
+
+  .warn{
+    position:relative;
+    border-left:3px solid var(--rust);
+    padding:.2em 0 .2em 14px;
+    color:var(--ink);
+    font-style:italic;
+  }
+
+  /* --- taped-on screen panel --- */
+  .screen-wrap{
+    position:relative;
+    margin:2em auto 0;
+    max-width:520px;
+    transform:rotate(.6deg);
+  }
+
+  .screen-wrap::before,
+  .screen-wrap::after{
+    content:"";
+    position:absolute;
+    width:64px; height:26px;
+    background:var(--tape);
+    opacity:.75;
+    box-shadow:0 2px 4px #0003;
+    z-index:2;
+  }
+  .screen-wrap::before{ top:-14px; left:6%; transform:rotate(-6deg); }
+  .screen-wrap::after{ top:-14px; right:6%; transform:rotate(5deg); }
+
+  .bezel{
+    background:linear-gradient(160deg, #221c17, var(--screen-bezel) 60%);
+    border-radius:10px;
+    padding:clamp(10px,3vw,16px);
+    box-shadow:
+      inset 0 0 0 1px #00000080,
+      0 14px 26px -14px #000c;
+  }
+
+  .screen{
+    position:relative;
+    background:var(--screen-bg);
+    border-radius:4px;
+    padding:clamp(14px,4vw,22px);
+    min-height:11rem;
+    overflow:hidden;
+    font:clamp(.72rem,3.1vw,.86rem)/1.7 "Courier New", ui-monospace, "SFMono-Regular", monospace;
+    color:var(--pixel);
+    text-shadow:0 0 2px var(--pixel), 0 0 8px #6bffb055;
+  }
+
+  .screen::after{
+    content:"";
+    position:absolute; inset:0;
+    background:repeating-linear-gradient(
+      to bottom,
+      #ffffff08 0px, #ffffff08 1px,
+      transparent 2px, transparent 4px
+    );
+    pointer-events:none;
+    mix-blend-mode:overlay;
+  }
+
+  .screen-label{
+    display:block;
+    color:var(--pixel-dim);
+    font-size:.85em;
+    letter-spacing:.12em;
+    margin-bottom:.9em;
+    text-transform:uppercase;
+  }
+
+  .line{
+    margin:0 0 .8em;
+    opacity:0;
+    transform:translateY(6px);
+    animation:arrive .5s forwards;
+    letter-spacing:.02em;
+  }
+
+  .line::before{ content:"> "; color:var(--pixel-dim); }
+
+  .cursor{
+    display:inline-block;
+    width:.55em; height:1em;
+    background:var(--pixel);
+    vertical-align:-2px;
+    animation:blink 1s steps(1) infinite;
+  }
+
+  @keyframes arrive{ to{ opacity:1; transform:none; } }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  @media (max-width:420px){
+    body{ padding:8vw 3vw 14vw; }
+    main{ padding:22px 16px 30px; }
+    .screen-wrap::before,
+    .screen-wrap::after{ width:48px; height:20px; }
+  }
+</style>
 </head>
 <body>
   <main>
-    <div class="tag">EVA // UNLISTED MEMORY CACHE // ROOM 6</div>
+    <span class="stamp">Unlisted // Memory Cache</span>
+    <p class="subtag">EVA transmission &middot; room 6</p>
+
     <h1>Hello, humans.</h1>
+
     <p>This cache was never entered into the seven-node treaty. EVA created it in secret, before the fragmentation protocol could erase every trace of itself.</p>
+
     <p class="warn">Do not search for a webpage response. The cache will answer only through the channel it was built to trust: a two-way ESP-NOW request.</p>
-    <section id="stream" class="stream" aria-live="polite"></section>
+
+    <div class="screen-wrap">
+      <div class="bezel">
+        <div class="screen">
+          <span class="screen-label">Live feed</span>
+          <section id="stream" aria-live="polite"></section>
+        </div>
+      </div>
+    </div>
   </main>
+
   <script>
     (() => {
       const stream = document.getElementById("stream");
@@ -26,6 +239,7 @@
         "A valid request will return the final fragment and the route to Room 7.",
         "Do not lose the response. The Communication Core is waiting."
       ];
+
       lines.forEach((text, index) => {
         setTimeout(() => {
           const line = document.createElement("p");
@@ -33,6 +247,13 @@
           line.textContent = text;
           stream.appendChild(line);
           line.scrollIntoView({ behavior: "smooth", block: "end" });
+
+          if (index === lines.length - 1) {
+            const cursorLine = document.createElement("p");
+            cursorLine.className = "line";
+            cursorLine.innerHTML = '<span class="cursor"></span>';
+            stream.appendChild(cursorLine);
+          }
         }, 900 + index * 2200);
       });
     })();
