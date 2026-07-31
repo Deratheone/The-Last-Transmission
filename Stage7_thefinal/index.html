@@ -98,7 +98,7 @@ PRIMARY KEY MISSING.</div>
 
     <div class="form">
       <label for="key">ENTER FINAL AUTHENTICATION KEY</label>
-      <input id="key" autocomplete="off" placeholder="XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX" maxlength="41">
+      <input id="key" autocomplete="off" placeholder="XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX" maxlength="42">
       <button id="verify">VERIFY MEMORY FRAGMENTS</button>
       <div id="feedback" role="status"></div>
     </div>
@@ -123,7 +123,12 @@ PRIMARY KEY MISSING.</div>
       const log = document.getElementById("log");
 
       const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
-      const normalise = value => value.replace(/\s+/g, "").replace(/[^0-9A-Za-z-]/g, "").toUpperCase();
+
+      // FIX: the old regex stripped "!" characters before comparison, which
+      // meant "...EVA!!!" typed by the user always got reduced to "...EVA"
+      // and could never match masterKey (which still had "!!!" in it).
+      // Allowing "!" through the whitelist fixes the mismatch.
+      const normalise = value => value.replace(/\s+/g, "").replace(/[^0-9A-Za-z!-]/g, "").toUpperCase();
 
       async function playFinalTransmission() {
         transmission.style.display = "block";
