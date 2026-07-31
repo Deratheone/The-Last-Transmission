@@ -8,7 +8,7 @@
 
 // ---------- WiFi AP Configuration ----------
 const char* AP_SSID = "EVA-MEMORY-3";
-const char* AP_PASSWORD = "123456";  // Shared six-digit access code
+const char* AP_PASSWORD = "1234567890";  // Shared six-digit access code
 
 // ---------- Next Stage Output ----------
 const char* NEXT_ROOM = "Room No: 4";

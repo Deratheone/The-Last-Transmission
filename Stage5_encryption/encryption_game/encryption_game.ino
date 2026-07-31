@@ -9,7 +9,7 @@
 
 // ---------- AP credentials ----------
 const char* AP_SSID = "EVA-CACHE-5";
-const char* AP_PASSWORD = "123456";   // Previous stage's shared access code
+const char* AP_PASSWORD = "1234567890";   // Previous stage's shared access code
 
 // ---------- Challenge answer ----------
 const char* EXPECTED_ANSWER = "EVA REMEMBERS TIME";
