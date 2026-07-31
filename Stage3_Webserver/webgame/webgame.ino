@@ -18,11 +18,11 @@
 
 // ---------- WiFi AP Configuration ----------
 const char* AP_SSID = "EVA-MEMORY-3";
-const char* AP_PASSWORD = "1234567890";  // Shared six-digit access code
+const char* AP_PASSWORD = "TANCEI00";  // Shared six-digit access code
 
 // ---------- Next Stage Output (kept for reference / Serial log only) ----------
-const char* NEXT_ROOM = "Room No: 4";
-const char* NEXT_CODE = "123456";
+const char* NEXT_ROOM = " ARCHIVE IV";
+const char* NEXT_CODE = "TIMEIS";
 const byte DNS_PORT = 53;
 
 DNSServer dnsServer;

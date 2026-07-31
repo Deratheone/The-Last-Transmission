@@ -10,15 +10,15 @@
 
 // ---------- AP credentials ----------
 const char* AP_SSID = "EVA-CACHE-5";
-const char* AP_PASSWORD = "1234567890";   // Previous stage's shared access code
+const char* AP_PASSWORD = "RY204200";   // Previous stage's shared access code
 
 // ---------- Challenge answer ----------
 const char* EXPECTED_ANSWER = "EVA REMEMBERS TIME";
 // Case-insensitive; spaces are ignored by the validator.
 
 // ---------- Next stage reveal ----------
-const char* NEXT_ROOM = "Room No: 6";
-const char* NEXT_CODE = "123456"; // Fragment 5 of the final master key.
+const char* NEXT_ROOM = "ARCHIVE VI";
+const char* NEXT_CODE = "NOTDIS"; // Fragment 5 of the final master key.
 
 // ---------- Captive portal ----------
 const byte DNS_PORT = 53;

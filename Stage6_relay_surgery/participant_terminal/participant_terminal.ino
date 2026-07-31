@@ -17,8 +17,8 @@
 constexpr uint8_t WIFI_CHANNEL = 1;
 uint8_t BROADCAST_MAC[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
-const char* EXPECTED_PASSWORD   = "RY2042";
-const char* REWARD_MESSAGE      = "Room Archive 7 - Password: EVA!!!";
+const char* EXPECTED_PASSWORD   = "NOTDIS";
+const char* REWARD_MESSAGE      = "Room: NEXUS - Password: TSMEMO";
 const unsigned long PROMPT_INTERVAL_MS = 5000;
 
 struct Packet {
