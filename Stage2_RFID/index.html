@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Stage 2 • Emergency Network Access</title>
   <style>
     :root {
@@ -49,6 +49,7 @@
     .app {
       width: 100%;
       min-height: 100vh;
+      min-height: 100dvh;
       display: grid;
       place-items: center;
       padding: 24px;
@@ -62,7 +63,7 @@
       box-shadow: var(--shadow);
       display: grid;
       gap: 20px;
-      padding: clamp(20px, 3vw, 36px);
+      padding: clamp(16px, 3vw, 36px);
       position: relative;
       overflow: hidden;
     }
@@ -74,6 +75,7 @@
       gap: 12px;
       border-bottom: 1px dashed #c9b9a3;
       padding-bottom: 12px;
+      flex-wrap: wrap;
     }
 
     .brand {
@@ -92,14 +94,14 @@
 
     h1 {
       margin: 0;
-      font-size: clamp(1.4rem, 2.8vw, 2.2rem);
+      font-size: clamp(1.3rem, 2.8vw, 2.2rem);
       line-height: 1.2;
     }
 
     .subtitle {
       margin: 8px 0 0;
       color: var(--muted);
-      font-size: clamp(0.95rem, 1.8vw, 1.05rem);
+      font-size: clamp(0.9rem, 1.8vw, 1.05rem);
     }
 
     .main {
@@ -114,12 +116,13 @@
       border-radius: 14px;
       background: #fffdf8;
       padding: 18px;
+      min-width: 0; /* prevents grid blowout on narrow screens */
     }
 
     .dots {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
-      gap: 10px;
+      gap: 8px;
       margin-bottom: 14px;
     }
 
@@ -152,7 +155,7 @@
 
     .keypad {
       display: grid;
-      grid-template-columns: repeat(3, minmax(80px, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 10px;
     }
 
@@ -160,14 +163,15 @@
       border: 2px solid #d3c4ae;
       border-radius: 10px;
       background: #fff;
-      font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+      font-size: clamp(1.05rem, 2.2vw, 1.4rem);
       font-weight: 700;
-      min-height: 62px;
+      min-height: 58px;
       cursor: pointer;
       transition: 0.15s ease;
+      touch-action: manipulation;
     }
-    .key:active { transform: scale(0.99); }
-    .key.action { font-size: 0.92rem; text-transform: uppercase; }
+    .key:active { transform: scale(0.97); }
+    .key.action { font-size: 0.88rem; text-transform: uppercase; }
     .key.enter {
       background: #f3e5d1;
       border-color: #b89163;
@@ -182,7 +186,10 @@
       color: #5d452e;
     }
 
+    /* PORTRAIT VIDEO: constrained width + tall aspect ratio, centered in its panel */
     .video-shell {
+      width: min(100%, 320px);
+      margin: 0 auto;
       border-radius: 16px;
       overflow: hidden;
       border: 2px solid #d7c7af;
@@ -192,30 +199,63 @@
 
     video {
       width: 100%;
-      aspect-ratio: 16 / 9;
+      aspect-ratio: 9 / 16;
+      max-height: 70vh;
       display: block;
       background: #000;
+      object-fit: cover;
     }
 
     .video-note {
       margin-top: 10px;
       color: #6a6258;
       font-size: 0.9rem;
+      text-align: center;
     }
 
     .footer {
       border-top: 1px dashed #c9b9a3;
       padding-top: 10px;
       color: #6a6258;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       display: flex;
       justify-content: space-between;
       gap: 10px;
       flex-wrap: wrap;
     }
 
+    /* Tablet / stacked layout */
     @media (max-width: 920px) {
       .main { grid-template-columns: 1fr; }
+      .video-shell { width: min(100%, 280px); }
+    }
+
+    /* Phones */
+    @media (max-width: 560px) {
+      .app { padding: 12px; }
+      .card { border-radius: 14px; gap: 14px; }
+      .header { padding-bottom: 8px; }
+      .brand { font-size: 0.8rem; }
+      .status { font-size: 0.72rem; }
+      .panel { padding: 14px; border-radius: 12px; }
+
+      .dots { gap: 6px; }
+      .dot { height: 46px; font-size: 1.1rem; border-radius: 8px; }
+
+      .keypad { gap: 8px; }
+      .key { min-height: 52px; border-radius: 8px; }
+
+      .video-shell { width: min(100%, 240px); border-radius: 12px; }
+      video { max-height: 60vh; }
+
+      .footer { font-size: 0.78rem; gap: 6px; }
+    }
+
+    /* Very small phones */
+    @media (max-width: 360px) {
+      .dot { height: 40px; font-size: 1rem; }
+      .key { min-height: 46px; font-size: 0.95rem; }
+      .video-shell { width: 100%; }
     }
   </style>
 </head>
@@ -280,7 +320,6 @@
 
       <div class="footer">
         <span>The Last Transmission • Mission Gateway</span>
-        <span>Touch + Keyboard Supported</span>
       </div>
     </div>
   </div>
