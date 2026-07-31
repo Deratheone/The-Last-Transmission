@@ -29,7 +29,7 @@ void setup() {
   peerInfo.encrypt = false;
   esp_now_add_peer(&peerInfo);
 
-  strcpy(myMessage.text, "Pass123456RoomARCHIVE2");
+  strcpy(myMessage.text, "Pass:TIMEIS ROOM:ARCHIVE 2");
 }
 
 void loop() {

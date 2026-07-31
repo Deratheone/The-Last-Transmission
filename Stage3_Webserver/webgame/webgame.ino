@@ -2009,7 +2009,7 @@ static const char PAGE_TEMPLATE[] PROGMEM = R"rawliteral(
           <div style="margin-top:8px;">COMPANION-07: "I remember. EVA trusted the people who could still communicate."</div>
           <div style="margin-top:8px;">Next Destination: <b>Room No: 4</b></div>
           <div style="margin-top:6px;">Shared Access Code:</div>
-          <div class="code">123456</div>
+          <div class="code">TANCEI</div>
         </div>
       </section>
     </div>
