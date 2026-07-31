@@ -1,9 +1,10 @@
 #include <WiFi.h>
 #include <WebServer.h>
+#include <DNSServer.h>
 
 // ===========================================================
 // Stage 5 - EVA Encrypted Memory Recovery Terminal
-// ESP32 AP + embedded story + decryption challenge
+// ESP32 AP + captive portal + embedded story + decryption challenge
 // No SPIFFS, no external files
 // ===========================================================
 
@@ -18,6 +19,11 @@ const char* EXPECTED_ANSWER = "EVA REMEMBERS TIME";
 // ---------- Next stage reveal ----------
 const char* NEXT_ROOM = "Room No: 6";
 const char* NEXT_CODE = "123456"; // Fragment 5 of the final master key.
+
+// ---------- Captive portal ----------
+const byte DNS_PORT = 53;
+DNSServer dnsServer;
+IPAddress apIP(192, 168, 4, 1);
 
 WebServer server(80);
 
@@ -38,7 +44,7 @@ void handleRoot() {
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 <title>Stage 5 • EVA Recovery Terminal</title>
 <style>
   :root{
@@ -56,6 +62,7 @@ void handleRoot() {
     --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
   }
   *{box-sizing:border-box}
+  html, body{ max-width:100%; overflow-x:hidden; }
   body{
     margin:0; min-height:100vh; color:var(--ink);
     font-family:Inter,Segoe UI,Arial,sans-serif;
@@ -63,13 +70,14 @@ void handleRoot() {
       radial-gradient(circle at 12% 8%, #16233a 0%, transparent 40%),
       radial-gradient(circle at 88% 92%, #142035 0%, transparent 45%),
       var(--bg);
-    display:grid; place-items:center; padding:20px;
-    overflow-x:hidden;
+    display:grid; place-items:center;
+    padding:20px;
   }
 
   .terminal{
     position:relative;
-    width:min(980px,96vw);
+    width:100%;
+    max-width:980px;
     border:1px solid var(--line);
     border-radius:16px;
     background:linear-gradient(180deg,var(--panel),var(--panel2));
@@ -97,6 +105,7 @@ void handleRoot() {
     padding:12px 16px; border-bottom:1px solid var(--line);
     background:#0d121a;
     font-size:.85rem; color:var(--muted);
+    flex-wrap:wrap; gap:6px;
   }
   .dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px}
   .red{background:#ff5f56}.yel{background:#ffbd2e}.grn{background:#27c93f}
@@ -134,6 +143,7 @@ void handleRoot() {
     font-family:var(--mono); font-size:1.05rem; color:var(--accent2);
     position:relative;
     letter-spacing:.03em;
+    word-break:break-word;
   }
   .dataBox .tag{
     color:#5a7191; font-size:.72rem; letter-spacing:.12em; display:block; margin-bottom:6px;
@@ -184,6 +194,7 @@ void handleRoot() {
     border:1px solid #335076; background:#0f1c2e; color:#d8ebff;
     border-radius:10px; padding:11px 16px; cursor:pointer; font-weight:700;
     transition:filter .15s, transform .1s;
+    flex:1 1 auto;
   }
   button:hover{filter:brightness(1.15)}
   button:active{transform:scale(.97)}
@@ -194,6 +205,7 @@ void handleRoot() {
   .status{
     margin-top:14px; min-height:1.4em; color:var(--muted); font-weight:600;
     font-family:var(--mono); font-size:.92rem;
+    word-break:break-word;
   }
   .ok{color:var(--good); text-shadow:0 0 8px rgba(34,197,94,.4)}
   .bad{color:var(--bad)}
@@ -216,10 +228,11 @@ void handleRoot() {
     padding:10px 14px; border-bottom:1px solid #1c3a29;
     background:#07130e; font-family:var(--mono); font-size:.78rem; color:#6fd39a;
     letter-spacing:.08em;
+    flex-wrap:wrap; gap:4px;
   }
 
   .scrollFeed{
-    height:230px; overflow-y:auto; padding:14px 16px;
+    height:230px; overflow-y:auto; overflow-x:hidden; padding:14px 16px;
     font-family:var(--mono); font-size:.95rem; line-height:1.7;
     scroll-behavior:smooth;
   }
@@ -231,6 +244,7 @@ void handleRoot() {
     animation:lineIn .45s forwards;
     margin:6px 0;
     white-space:pre-wrap;
+    word-break:break-word;
   }
   @keyframes lineIn{ to{opacity:1; transform:translateY(0)} }
 
@@ -255,6 +269,7 @@ void handleRoot() {
     letter-spacing:.14em; margin-top:8px;
     text-shadow:0 0 16px rgba(183,255,208,.45);
     animation:codeGlow 2.2s ease-in-out infinite;
+    word-break:break-word;
   }
   @keyframes codeGlow{
     0%,100%{text-shadow:0 0 10px rgba(183,255,208,.35)}
@@ -265,6 +280,17 @@ void handleRoot() {
     margin-top:16px; font-size:.8rem; color:#5a6c88;
     border-top:1px solid var(--line); padding-top:10px;
     display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px;
+  }
+
+  /* ===== Mobile tightening ===== */
+  @media (max-width: 480px){
+    body{ padding:10px; }
+    .body{ padding:16px; }
+    .topbar{ padding:10px 12px; font-size:.78rem; }
+    .dataBox{ font-size:.92rem; padding:12px; }
+    .btnRow button{ padding:12px 14px; }
+    .scrollFeed{ height:200px; font-size:.88rem; }
+    .code{ font-size:1.25rem; letter-spacing:.08em; }
   }
 </style>
 </head>
@@ -457,8 +483,13 @@ void handleRoot() {
   server.send(200, "text/html", page);
 }
 
+// Any URL the browser/OS doesn't recognize -> redirect to the terminal.
+// This is what makes the phone's captive-portal probe pop the browser
+// automatically (Apple /hotspot-detect.html, Android /generate_204,
+// Windows /connecttest.txt, etc. all land here and get bounced to "/").
 void handleNotFound() {
-  server.send(404, "text/plain", "Not found. Open / to access the backup terminal.");
+  server.sendHeader("Location", String("http://") + apIP.toString(), true);
+  server.send(302, "text/plain", "");
 }
 
 void setup() {
@@ -469,6 +500,7 @@ void setup() {
   Serial.println("Starting AP...");
 
   WiFi.mode(WIFI_AP);
+  WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
   if (!WiFi.softAP(AP_SSID, AP_PASSWORD)) {
     Serial.println("ERROR: AP start failed!");
     while (true) delay(1000);
@@ -483,15 +515,19 @@ void setup() {
   Serial.print("Open: http://");
   Serial.println(ip);
 
+  // Captive portal: answer every DNS lookup with our own IP
+  dnsServer.start(DNS_PORT, "*", apIP);
+
   server.on("/", handleRoot);
   server.on("/index.html", handleRoot);
   server.onNotFound(handleNotFound);
   server.begin();
 
-  Serial.println("Web server started.");
+  Serial.println("Web server + captive portal started.");
 }
 
 void loop() {
+  dnsServer.processNextRequest();
   server.handleClient();
   delay(2);
 }
