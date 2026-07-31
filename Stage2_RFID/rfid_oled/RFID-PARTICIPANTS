@@ -1,0 +1,62 @@
+#include <SPI.h>
+#include <MFRC522.h>
+
+#define SS_PIN 5
+#define RST_PIN 27
+MFRC522 mfrc522(SS_PIN, RST_PIN);
+MFRC522::MIFARE_Key key;
+
+byte stolenData[18]; 
+int playerState = 0; // 0 = Waiting to Steal, 1 = Waiting to Paste
+
+void setup() {
+  Serial.begin(115200);
+  SPI.begin();
+  mfrc522.PCD_Init();
+  for (byte i = 0; i < 6; i++) key.keyByte[i] = 0xFF;
+
+  Serial.println(F("\n======================================"));
+  Serial.println(F("     DATA HARVESTER TOOL ACTIVE       "));
+  Serial.println(F("======================================"));
+  Serial.println(F("[STEP 1]: Scan the fixed room tag (Blue) to steal the code..."));
+}
+
+void loop() {
+  // Wait for any tag to be tapped
+  if (!mfrc522.PICC_IsNewCardPresent() || !mfrc522.PICC_ReadCardSerial()) return;
+
+  byte block = 4;
+  if (mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, block, &key, &(mfrc522.uid)) != MFRC522::STATUS_OK) {
+    Serial.println(F("Connection failed. Try again."));
+    delay(1000);
+    return;
+  }
+
+  // --- STATE 0: STEAL THE DATA (From Blue Tag) ---
+  if (playerState == 0) {
+    byte bufferSize = sizeof(stolenData);
+    if (mfrc522.MIFARE_Read(block, stolenData, &bufferSize) == MFRC522::STATUS_OK) {
+      Serial.println(F("\n>>> PAYLOAD EXTRACTED TO MEMORY! <<<"));
+      Serial.println(F("[STEP 2]: Now tap your BLANK WHITE CARD to paste the code..."));
+      playerState = 1; // Switch to paste mode
+    }
+  } 
+  
+  // --- STATE 1: PASTE THE DATA (To White Card) ---
+  else if (playerState == 1) {
+    if (mfrc522.MIFARE_Write(block, stolenData, 16) == MFRC522::STATUS_OK) {
+      Serial.println(F("\n>>> PAYLOAD PASTED SUCCESSFULLY! <<<"));
+      Serial.println(F("Your white card is armed. Go scan it at the OLED terminal!"));
+      
+      // Reset so the tool can be used again
+      playerState = 0; 
+      Serial.println(F("\n[TOOL RESET]: Ready to steal data again..."));
+    } else {
+      Serial.println(F("Paste failed. Hold the white card closer."));
+    }
+  }
+
+  mfrc522.PICC_HaltA();
+  mfrc522.PCD_StopCrypto1();
+  delay(2000); // 2 second delay so they have time to move their hands
+}

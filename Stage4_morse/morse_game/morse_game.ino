@@ -302,7 +302,7 @@ SystemState state = BROADCAST;
 
 // Predefined password (6 characters, any letter/digit) -- change freely
 #define PASSWORD_LENGTH 6
-const char PASSWORD[PASSWORD_LENGTH] = {'t','a','n','c','e','i'};
+const char PASSWORD[PASSWORD_LENGTH] = {'t','i','m','e','i','s'};
 
 // =====================================================================
 // ---------------------------- GLOBAL VARIABLES ---------------------------
@@ -341,7 +341,7 @@ bool          melodyPlaying      = false;
 unsigned long stateEnterTime     = 0;
 
 // Scrolling marquee state for the OLED "decrypt this..." message (BROADCAST only)
-const char*   SCROLL_TEXT          = "DECODE THE NOISE AND ENTER LONG PRESS TO CONTINUE     ";
+const char*   SCROLL_TEXT          = "DECODE THE NOISE AND LONG PRESS TO CONTINUE     ";
 const unsigned long SCROLL_STEP_MS = 40;   // ms between each 1px scroll step
 int           scrollX              = 0;
 int           scrollTextWidthPx    = 0;
@@ -448,7 +448,7 @@ void enterSuccess() {
   stateEnterTime = millis();
   showSuccess();
   startMelody(SUCCESS_MELODY, SUCCESS_MELODY_LEN);
-  oledShowMessage("ARCHIVE 5", "--> TSMEMO");
+  oledShowMessage("ARCHIVE 5", "--> RY2042");
 }
 
 void enterFailure() {

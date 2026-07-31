@@ -281,17 +281,17 @@
           <div class="hint" id="hint">Awaiting code entry...</div>
 
           <div class="keypad" id="keypad">
-            <button class="key" data-key="1">1</button>
-            <button class="key" data-key="2">2</button>
-            <button class="key" data-key="3">3</button>
-            <button class="key" data-key="4">4</button>
-            <button class="key" data-key="5">5</button>
-            <button class="key" data-key="6">6</button>
-            <button class="key" data-key="7">7</button>
-            <button class="key" data-key="8">8</button>
-            <button class="key" data-key="9">9</button>
+            <button class="key" data-key="E">E</button>
+            <button class="key" data-key="V">V</button>
+            <button class="key" data-key="A">A</button>
+            <button class="key" data-key="Q">Q</button>
+            <button class="key" data-key="W">W</button>
+            <button class="key" data-key="R">R</button>
+            <button class="key" data-key="T">T</button>
+            <button class="key" data-key="Y">Y</button>
+            <button class="key" data-key="!">!</button>
             <button class="key action" id="clearBtn">Clear</button>
-            <button class="key" data-key="0">0</button>
+            <button class="key" data-key="S">S</button>
             <button class="key action enter" id="enterBtn">Enter</button>
           </div>
         </section>
@@ -309,7 +309,7 @@
             Archive locked. Enter the beacon fragment to begin playback.
           </div>
           <div class="video-note" id="archiveLog" aria-live="polite">
-            ARCHIVE STATUS: fragment missing. Awaiting a six-digit recovery key.
+            ARCHIVE STATUS: fragment missing. Awaiting a six-character recovery key.
           </div>
           <div class="video-note" id="adminInstruction" hidden>
             SYSTEM ERROR: ADMIN PRIVILEGES REQUIRED.<br>
@@ -328,7 +328,7 @@
     (() => {
       "use strict";
 
-      const AUTH_CODE = "123456";
+      const AUTH_CODE = "EVA!!!";
       const CODE_LENGTH = 6;
 
       const dotsEl = document.getElementById("dots");
@@ -366,10 +366,10 @@
         }
       }
 
-      function appendDigit(d) {
+      function appendChar(c) {
         if (unlocked) return;
         if (inputCode.length >= CODE_LENGTH) return;
-        inputCode += d;
+        inputCode += c;
         renderDots();
         setHint(`Code entered: ${inputCode.length}/${CODE_LENGTH}`);
       }
@@ -440,7 +440,7 @@
         if (unlocked) return;
 
         if (inputCode.length !== CODE_LENGTH) {
-          setHint("Please enter all 6 digits before pressing Enter.", "error");
+          setHint("Please enter all 6 characters before pressing Enter.", "error");
           return;
         }
 
@@ -457,7 +457,7 @@
           missionVideo.pause();
           videoNote.textContent = archiveFaulted
             ? "Archive halted. Program the RFID administrator card."
-            : "Video is locked. Enter valid 6-digit code first.";
+            : "Video is locked. Enter valid code first.";
         }
       });
 
@@ -476,8 +476,8 @@
       keypadEl.addEventListener("click", (e) => {
         const btn = e.target.closest("button");
         if (!btn) return;
-        const digit = btn.getAttribute("data-key");
-        if (digit !== null) appendDigit(digit);
+        const char = btn.getAttribute("data-key");
+        if (char !== null) appendChar(char);
       });
 
       clearBtn.addEventListener("click", clearCode);
@@ -486,7 +486,9 @@
       window.addEventListener("keydown", (e) => {
         if (unlocked) return;
 
-        if (e.key >= "0" && e.key <= "9") appendDigit(e.key);
+        const upper = e.key.length === 1 ? e.key.toUpperCase() : e.key;
+
+        if (/^[A-Z!]$/.test(upper)) appendChar(upper);
         else if (e.key === "Backspace") {
           inputCode = inputCode.slice(0, -1);
           renderDots();

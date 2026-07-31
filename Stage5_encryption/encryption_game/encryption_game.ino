@@ -335,8 +335,8 @@ void handleRoot() {
         <div class="scrollFeed" id="scrollFeed"></div>
         <div class="coords" id="coordsBox">
           <div class="stampWrap">
-            <div class="room">Proceed to Room No. 6</div>
-            <div class="code">123456</div>
+            <div class="room">Proceed to ARCHIVE VI</div>
+            <div class="code">NOTDIS</div>
           </div>
         </div>
       </div>
