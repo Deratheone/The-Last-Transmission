@@ -10,7 +10,7 @@ Use the supplied ESP32 receiver to listen for the ESP-NOW transmission. Read the
 
 ## Expected result
 
-The beacon identifies **Room 1**, gives the first recovered code `123456`, and directs the group to **Room 2**.
+The beacon identifies **Room 1**, gives the first recovered code , and directs the group to **Room 2**.
 
 ## Files and setup
 
