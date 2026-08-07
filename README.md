@@ -28,10 +28,10 @@ For the full facilitator narrative and stage flow, see [STORY_AND_STAGE_FLOW.md]
 <table>
   <tr>
     <td align="center" width="50%">
-      <video src="Workshop_material/video0.mp4" controls width="420"></video>
+      <video src="https://github.com/user-attachments/assets/c379550b-3886-4411-80f1-b77bb3610164" controls width="420"></video>
     </td>
     <td align="center" width="50%">
-      <video src="Workshop_material/video1.mp4" controls width="230"></video>
+      <video src="https://github.com/user-attachments/assets/b914cc87-652c-40ee-bdd0-6f3a4596f333" controls width="230"></video>
     </td>
   </tr>
 </table>
