@@ -10,6 +10,32 @@ The identity of the unknown signal is deliberately withheld until the final room
 
 For the full facilitator narrative and stage flow, see [STORY_AND_STAGE_FLOW.md](STORY_AND_STAGE_FLOW.md).
 
+## Event posters
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="Workshop_material/eventposter0.jpeg" alt="Event poster 0" width="420" />
+    </td>
+    <td align="center">
+      <img src="Workshop_material/eventposter1.jpeg" alt="Event poster 1" width="420" />
+    </td>
+  </tr>
+</table>
+
+## Story videos
+
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <video src="Workshop_material/video0.mp4" controls width="420"></video>
+    </td>
+    <td align="center" width="50%">
+      <video src="Workshop_material/video1.mp4" controls width="230"></video>
+    </td>
+  </tr>
+</table>
+
 ## Stage map
 
 | Room | Stage | Challenge | Main technology |
