@@ -6,9 +6,9 @@ The Communication Core is almost restored, but it rejects every individual acces
 
 ## Participant task
 
-Enter the six recovered codes in chronological room order:
+Enter the six recovered fragments in the final reconstruction order:
 
-`123456-123456-123456-123456-123456-123456`
+`TIMEIS-NOTDIS-TANCEI-TSMEMO-RY2042-EVA!!!`
 
 The page rejects a single code or an incorrectly formatted sequence.
 

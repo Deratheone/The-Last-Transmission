@@ -60,15 +60,15 @@ For the full facilitator narrative and stage flow, see [STORY_AND_STAGE_FLOW.md]
 
 ## Current event configuration
 
-Every stage currently uses the shared six-digit code:
+The current key fragments used across the event are:
 
-`123456`
+`EVA!!!`, `TANCEI`, `TIMEIS`, `RY2042`, `NOTDIS`, `TSMEMO`
 
-The Room 7 master-key format is:
+Room 7 currently validates this master key:
 
-`123456-123456-123456-123456-123456-123456`
+`TIMEIS-NOTDIS-TANCEI-TSMEMO-RY2042-EVA!!!`
 
-The RFID write value in Room 2 is also `123456`. It acts as the administrator credential for that stage and is not an additional seventh key.
+Room 2 still uses RFID write value `123456` as its card token. It is an administrator credential for that stage, not an additional master-key fragment.
 
 ## Project layout
 

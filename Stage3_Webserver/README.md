@@ -6,13 +6,13 @@ Companion-07 is a small archived process that knew EVA before the world stopped 
 
 ## Participant task
 
-1. Join the ESP32 access point `EVA-MEMORY-3` with password `1234567890`.
+1. Join the ESP32 access point `EVA-MEMORY-3` with password `TANCEI00`.
 2. Open the IP address printed in Serial Monitor.
 3. Complete three memory-pattern rounds by repeating the four-pad sequence in order.
 
 ## Expected result
 
-Companion-07 remembers that EVA trusted people who could still communicate. The page reveals **Room 4** and `123456`.
+Companion-07 remembers that EVA trusted people who could still communicate. The page reveals **Room 4** and `TIMEIS`.
 
 ## Files and hardware
 

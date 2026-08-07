@@ -6,14 +6,14 @@ This data facility preserves a damaged exchange between EVA and the unidentified
 
 ## Participant task
 
-1. Join `EVA-CACHE-5` with password `123456`.
+1. Join `EVA-CACHE-5` with password `RY204200`.
 2. Open the ESP32 IP address shown in Serial Monitor.
 3. Reverse the `+3` Caesar shift in `HYD UHPHPEHUV WLPH`.
 4. Enter the decrypted phrase: `EVA REMEMBERS TIME`.
 
 ## Expected result
 
-The recovered exchange says that EVA hid something the fragmentation protocol could not erase. It reveals a hidden synchronization cache in **Room 6** and its access key, `123456`.
+The recovered exchange says that EVA hid something the fragmentation protocol could not erase. It reveals a hidden synchronization cache in **Room 6** and its access key, `NOTDIS`.
 
 ## Files and hardware
 

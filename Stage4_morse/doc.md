@@ -6,7 +6,7 @@ Only a weak Morse trace remains at this node. The first touch wakes the damaged 
 
 ## Participant task
 
-Enter `123456` using the touch sensor and the desk's Morse reference table:
+Enter `TIMEIS` using the touch sensor and the desk's Morse reference table:
 
 - short press = dot
 - long press = dash
@@ -16,7 +16,7 @@ Each correct digit receives a green confirmation. A wrong digit flashes red and 
 
 ## Expected result
 
-After all six digits are correct, the device sends the next handoff through the green LED in Morse: **Room 5** and `123456`.
+After all six characters are correct, the device sends the next handoff through the green LED in Morse: **Room 5** and `RY2042`.
 
 ## Files and hardware
 

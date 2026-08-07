@@ -24,25 +24,25 @@ The Stage 1 transmitter should already be operating at the front desk. The group
 
 | Room / Stage | What participants see | What they do | What the stage reveals |
 |---|---|---|---|
-| **Room 1 — Stage 1** | EVA's last beacon is transmitting from the front desk. | Build/use the ESP-NOW receiver and read the broadcast. | Go to **Room 2**. Record `123456`. |
-| **Room 2 — Stage 2** | The smartboard plays EVA's early-memory archive: its creation, its importance, and humanity gradually ignoring it. The archive stops with an administrator error. | Enter `123456`, then write `123456` to Block 4 of the RFID card and scan it at the RC522 reader. | OLED: go to **Room 3**. Record `123456`. |
-| **Room 3 — Stage 3** | Companion-07 says it knew EVA before the world stopped listening, but its memory is damaged. | Join `EVA-MEMORY-3` with password `123456` and complete three memory-pattern rounds. | Companion-07 remembers EVA's trust in people who can still communicate. Go to **Room 4**. Record `123456`. |
-| **Room 4 — Stage 4** | A weak, damaged Morse trace appears. The first touch wakes the archive with green, red, and buzzer feedback. | Enter `123456` in Morse using the touch sensor and a supplied Morse reference table. | The green LED transmits the Room 5 handoff in Morse. Record `123456`. |
-| **Room 5 — Stage 5** | EVA's data facility contains a corrupted conversation with the unidentified signal. | Join `EVA-CACHE-5` with password `123456`; reverse the +3 Caesar shift and enter `EVA REMEMBERS TIME`. | A damaged conversation identifies a hidden synchronization cache. Go to **Room 6**. Record `123456`. |
-| **Room 6 — Stage 6** | The smartboard explains that this is an unlisted cache EVA created in secret. | Send `EVA_RESTORE` with key `123456` through the participant ESP-NOW terminal; receive the response. | The hidden cache directs the group to **Room 7**. Record `123456`. |
-| **Room 7 — Stage 7** | A black Communication Core reports 98% memory recovery but rejects individual keys. | Enter all six recovered codes in sequence. | EVA's full memory returns and the final transmission plays. |
+| **Room 1 — Stage 1** | EVA's last beacon is transmitting from the front desk. | Build/use the ESP-NOW receiver and read the broadcast. | Go to **Room 2**. Record `EVA!!!`. |
+| **Room 2 — Stage 2** | The smartboard plays EVA's early-memory archive: its creation, its importance, and humanity gradually ignoring it. The archive stops with an administrator error. | Enter `EVA!!!`, then write `123456` to Block 4 of the RFID card and scan it at the RC522 reader. | OLED: go to **Room 3**. Record `TANCEI`. |
+| **Room 3 — Stage 3** | Companion-07 says it knew EVA before the world stopped listening, but its memory is damaged. | Join `EVA-MEMORY-3` with password `TANCEI00` and complete three memory-pattern rounds. | Companion-07 remembers EVA's trust in people who can still communicate. Go to **Room 4**. Record `TIMEIS`. |
+| **Room 4 — Stage 4** | A weak, damaged Morse trace appears. The first touch wakes the archive with green, red, and buzzer feedback. | Enter `TIMEIS` in Morse using the touch sensor and a supplied Morse reference table. | The green LED transmits the Room 5 handoff in Morse. Record `RY2042`. |
+| **Room 5 — Stage 5** | EVA's data facility contains a corrupted conversation with the unidentified signal. | Join `EVA-CACHE-5` with password `RY204200`; reverse the +3 Caesar shift and enter `EVA REMEMBERS TIME`. | A damaged conversation identifies a hidden synchronization cache. Go to **Room 6**. Record `NOTDIS`. |
+| **Room 6 — Stage 6** | The smartboard explains that this is an unlisted cache EVA created in secret. | Send `EVA_RESTORE` with key `NOTDIS` through the participant ESP-NOW terminal; receive the response. | The hidden cache directs the group to **Room 7**. Record `TSMEMO`. |
+| **Room 7 — Stage 7** | A black Communication Core reports 98% memory recovery but rejects individual keys. | Enter `TIMEIS-NOTDIS-TANCEI-TSMEMO-RY2042-EVA!!!`. | EVA's full memory returns and the final transmission plays. |
 
-## Shared-code configuration
+## Current key configuration
 
-For the current event build, every six-digit handoff deliberately uses the same code:
+Current master-key fragments are:
 
-`123456`
+`EVA!!!`, `TANCEI`, `TIMEIS`, `RY2042`, `NOTDIS`, `TSMEMO`
 
-This means the final smartboard accepts:
+The final smartboard currently accepts:
 
-`123456-123456-123456-123456-123456-123456`
+`TIMEIS-NOTDIS-TANCEI-TSMEMO-RY2042-EVA!!!`
 
-The Stage 2 RFID write value is also `123456`. It is a required administrator credential, not an additional seventh key.
+The Stage 2 RFID write value remains `123456`. It is a required administrator credential, not an additional master-key fragment.
 
 ## Stage 5 conversation beat
 

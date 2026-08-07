@@ -8,7 +8,7 @@ The smartboard opens EVA's early-memory archive: its creation, its role in civil
 
 ## Participant task
 
-1. Enter `123456` on the smartboard archive page.
+1. Enter `EVA!!!` on the smartboard archive page.
 2. Watch the archive until it halts and displays the RFID instruction.
 3. Write `123456` to **Block 4** of the supplied MIFARE Classic RFID card.
 4. Scan that card at the RC522 reader.
@@ -17,7 +17,7 @@ The OLED reports the number of matching bytes for a wrong card. A correct card r
 
 ## Expected result
 
-The OLED displays **Room 3** and `123456`. This is the next access code and the second recovered key position. The RFID value is not an additional seventh key.
+The OLED displays **Room 3** and `TANCEI`. This is the next recovered key fragment. The RFID value `123456` is only the administrator card token for this room.
 
 ## Files and hardware
 
